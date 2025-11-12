@@ -56,11 +56,49 @@ JwtAuthDotNet9/
 
 ## Installation & Setup
 
-### 1. Clone/Open the Project
+### 1. Start SQL Server with Docker
 
-### 2. Configure Database Connection
+If you don't have SQL Server installed locally, start it with Docker:
 
-Edit `appsettings.json` and update the connection string:
+```bash
+docker run -e 'ACCEPT_EULA=Y' \
+    -e 'SA_PASSWORD=YourStrong(!)Password' \
+    -p 1433:1433 \
+    --name sqlserver \
+    -d mcr.microsoft.com/mssql/server:2022-latest
+```
+
+**Verify SQL Server is running:**
+
+```bash
+docker ps | grep sqlserver
+```
+
+**To stop SQL Server:**
+
+```bash
+docker stop sqlserver
+```
+
+**To restart SQL Server:**
+
+```bash
+docker start sqlserver
+```
+
+**To remove SQL Server container:**
+
+```bash
+docker rm sqlserver
+```
+
+> **Note:** The default `SA_PASSWORD` in `appsettings.json` matches this Docker command. Change both if you use a different password.
+
+### 2. Clone/Open the Project
+
+### 3. Configure Database Connection
+
+Edit `appsettings.json` and update the connection string (if using custom password):
 
 ```json
 {
@@ -82,7 +120,7 @@ Edit `appsettings.json` and update the connection string:
 - Store sensitive configuration in Azure Key Vault or similar in production
 - Never commit real credentials to version control
 
-### 3. Apply Database Migrations
+### 4. Apply Database Migrations
 
 ```bash
 dotnet ef database update
@@ -90,7 +128,7 @@ dotnet ef database update
 
 This creates the database schema with User table and indexes.
 
-### 4. Run the Application
+### 5. Run the Application
 
 ```bash
 dotnet run
